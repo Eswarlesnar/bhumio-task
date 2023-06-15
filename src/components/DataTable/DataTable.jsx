@@ -6,8 +6,10 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import { filterData } from '../../utils';
 
-function DataTable({headerData , data}) {
+function DataTable({headerData , data , userFilter}) {
+  const filteredData = filterData(data , userFilter)
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
@@ -21,7 +23,7 @@ function DataTable({headerData , data}) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {data?.map((item) => (
+          {filteredData?.map((item) => (
             <TableRow
               key={item.id}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}

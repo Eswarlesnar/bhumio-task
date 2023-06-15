@@ -1,12 +1,15 @@
-import { useState } from "react";
+import { useState , useContext } from "react";
+import { dataContext } from "./context/dataContext";
 import DataTable from "./components/DataTable/DataTable";
+import Filter from "./components/Filter/Filter";
+import "./App.css"
 
 function App() {
   const [file, setFile] = useState();
   const [array, setArray] = useState([]);
-
+  const [userFilter , setUserFilter] = useState("")
+  const {setData} = useContext(dataContext)
   const fileReader = new FileReader();
-
   const handleOnChange = (e) => {
     setFile(e.target.files[0]);
   };
@@ -25,6 +28,7 @@ function App() {
     });
 
     setArray(array);
+    setData(array)
   };
 
   const handleOnSubmit = (e) => {
@@ -44,9 +48,9 @@ function App() {
   console.log(array)
 
   return (
-    <div style={{ textAlign: "center" }}>
-      <h1>REACTJS CSV IMPORT EXAMPLE </h1>
-      <form>
+    <div className="app-container">
+      <h1> CSV DATATABLE </h1>
+      <form className="csv-import">
         <input
           type={"file"}
           id={"csvFileInput"}
@@ -62,10 +66,9 @@ function App() {
           IMPORT CSV
         </button>
       </form>
-
+      <Filter userFilter = {userFilter}  setUserFilter = {setUserFilter}/>
       <br />
-
-      <DataTable headerData = {headerKeys} data = {array}/>
+      <DataTable headerData = {headerKeys} data = {array} userFilter = {userFilter} />
     </div>
   );
 }

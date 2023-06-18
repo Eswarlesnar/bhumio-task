@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 
 import { DataGrid } from '@mui/x-data-grid';
 import { filterData } from '../../utils';
@@ -5,6 +6,9 @@ import { filterData } from '../../utils';
 function DataTable({headerData , data , userFilter}) {
   const filteredData = filterData(data , userFilter)  
   const columns = headerData.map(item => {
+    if(["Part #" , "Alt.Part#"].includes(item)){
+      return {field : item , headerName : item  , headerClassName : "app-datatable-header" , width : 150}
+    }
     return {field : item , headerName : item  , headerClassName : "app-datatable-header"}
   })
   console.log(columns)

@@ -12,7 +12,9 @@
 .csv-container {
   width : 92%;
   margin : auto;
- 
+  display : flex ;
+  gap :10px;
+  flex-wrap: wrap;
 }
 
 .csv-import { 

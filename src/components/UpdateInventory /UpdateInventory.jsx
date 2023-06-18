@@ -1,7 +1,8 @@
+/* eslint-disable react/prop-types */
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridCellEditStopReasons } from '@mui/x-data-grid';
 import { useState  , useContext , useEffect} from 'react';
 import { dataContext } from '../../context/dataContext';
 import { filterData } from '../../utils';
@@ -31,6 +32,8 @@ const UpdateInventory = ({userFilter}) => {
     const {data , setData} = useContext(dataContext)
     const filteredData = filterData(data , userFilter)
 
+    const [updatedRowIds, setUpdatedRowIds] = useState([])
+
     const columns = [
       { field: 'Part #', headerName: 'Part #', width: 200, editable: false ,  headerClassName : "app-datatable-header" },
       { field: 'Alt.Part#', headerName: 'Alt.part#', width: 200, editable: false , headerClassName : "app-datatable-header" },
@@ -39,48 +42,57 @@ const UpdateInventory = ({userFilter}) => {
     ];
 
     
- 
+
     useEffect(() => {
        if(open === true) {
          setRows(filteredData)
        }
     },[open])
 
-    
     const handleUpdatedInventory = () => {
-      // console.log("Entering the update funciton")
       const tempGlobalData = [...data]
-      // console.log(rows)
-      for(let i=0 ; i< rows.length ; i++){
-        // console.log("Entergin the for loop")
-        let id = rows[i].id
+      for(let i=0 ; i< updatedRowIds.length ; i++){
+        let id = updatedRowIds[i]
         let indexOfmatchId = tempGlobalData.findIndex(item => item.id === id)
         tempGlobalData[indexOfmatchId] = rows[i]
       }
-      // console.log(tempGlobalData)
       setData(tempGlobalData)
       setOpen(false)
     }
    
     const handleCellEditCommit = 
       (params , event) => {
+        if (params.reason === GridCellEditStopReasons.cellFocusOut) {
+          event.defaultMuiPrevented = true;
+        }
         const { id, field , value} = params
         
         const updatedValue = event.target?.value ? event.target.value : value
-        console.log("Entering the Cell edit ")
-        console.log(updatedValue)
+        
         const updatedRows = rows.map((row) => {
-          return  row.id === id ? { ...row, [field]: updatedValue } : row
+          if (row.id === id) {
+            if (!updatedRowIds.includes(id)) {
+              setUpdatedRowIds((prev) => {
+                return [...prev, id]
+              })
+            }
+            return { ...row, [field]: updatedValue }
+          }
+          return row
         }  
         );
-        console.log(updatedRows)
         setRows(updatedRows);
       }
+
+
     const handleOpen = () => setOpen(true);
+
     const handleClose = () => {
       handleUpdatedInventory()
-      setOpen(false)
+      setOpen(false);
     }
+
+
     return <div>
         <Button variant = "contained" onClick = {handleOpen}>Update Inventory</Button>
         <Modal

@@ -1,6 +1,7 @@
 import { useState , useContext } from "react";
 import Button from '@mui/material/Button';
 import {v4 as uuid} from "uuid"
+import { ExportToCsv } from 'export-to-csv'; 
 import { dataContext } from "./context/dataContext";
 import DataTable from "./components/DataTable/DataTable";
 import Filter from "./components/Filter/Filter";
@@ -50,12 +51,31 @@ function App() {
   };
 
   const headerKeys = Object.keys(Object.assign({}, ...array));
+
+  const csvOptions = {
+    fieldSeparator: ',',
+    quoteStrings: '"',
+    decimalSeparator: '.',
+    showLabels: true,
+    useBom: true,
+    useKeysAsHeaders: false,
+    headers: headerKeys.map((c) => c),
+  };
   
+  const csvExporter = new ExportToCsv(csvOptions);
   
-const widthAndHeightButton = { 
-  width : "130px",
-  height : "33px"
-}
+  const handleExportCSV = () => { 
+     if(data.length < 1) {
+      return
+     }
+     csvExporter.generateCsv(data)
+  }
+
+  
+  const widthAndHeightButton = { 
+    width : "130px",
+    height : "33px"
+  }
 
   return (
     <div className="app-container">
@@ -78,10 +98,11 @@ const widthAndHeightButton = {
             IMPORT CSV
           </Button>
         </form>
+        <Button variant = "contained" onClick = {handleExportCSV}>Export CSV</Button>
       </div>
       
       <Filter userFilter = {userFilter}  setUserFilter = {setUserFilter}/>
-      <br />
+      
       <DataTable headerData = {headerKeys} data = {data} userFilter = {userFilter} />
     </div>
   );

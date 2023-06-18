@@ -18,7 +18,7 @@ function App() {
   };
 
   const csvFileToArray = string => {
-    const csvHeader = string.slice(0, string.indexOf("\n")).split(",");
+    const csvHeader = string.slice(0, string.indexOf("\n")).split(",");  // gettting the first row for headers
     const csvRows = string.slice(string.indexOf("\n") + 1).split("\n");
 
     const array = csvRows.map(i => {
@@ -68,7 +68,8 @@ function App() {
      if(data.length < 1) {
       return
      }
-     csvExporter.generateCsv(data)
+     const dataWithoutId = data.map(({id , ...rest}) => ({...rest}))  ///removing the id added for unique identification
+     csvExporter.generateCsv(dataWithoutId)
   }
 
   

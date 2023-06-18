@@ -32,7 +32,7 @@ const UpdateInventory = ({userFilter}) => {
     const {data , setData} = useContext(dataContext)
     const filteredData = filterData(data , userFilter)
 
-    const [updatedRowIds, setUpdatedRowIds] = useState([])
+    const [updatedRowIds, setUpdatedRowIds] = useState([])  
 
     const columns = [
       { field: 'Part #', headerName: 'Part #', width: 200, editable: false ,  headerClassName : "app-datatable-header" },
@@ -68,12 +68,12 @@ const UpdateInventory = ({userFilter}) => {
         const { id, field , value} = params
         
         const updatedValue = event.target?.value ? event.target.value : value
-        
+
         const updatedRows = rows.map((row) => {
           if (row.id === id) {
             if (!updatedRowIds.includes(id)) {
               setUpdatedRowIds((prev) => {
-                return [...prev, id]
+                return [...prev, id]     ///saving ids only to update the rows that are edited /efficiency
               })
             }
             return { ...row, [field]: updatedValue }

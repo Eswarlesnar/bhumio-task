@@ -1,0 +1,28 @@
+.update-datagrid {
+    width : 100%;
+    height : 400px;
+}
+
+.modal { 
+    width : 900px;
+}
+
+@media  screen and (max-width : 1000px) {
+    .modal{
+        width :700px
+    }
+}
+
+/* 
+@media  screen and (max-width : 800px) {
+    .modal{
+        width :500px
+    }
+}
+
+
+@media  screen and (max-width : 650px) {
+    .modal{
+        width :300px
+    }
+} */

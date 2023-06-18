@@ -1,8 +1,6 @@
 import { useState } from "react"
 import Button from '@mui/material/Button';
 import OutlinedInput from '@mui/material/OutlinedInput';
-
-
 import "./filter.css"
 import UpdateInventory from "../UpdateInventory /UpdateInventory";
 

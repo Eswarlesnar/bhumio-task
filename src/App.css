@@ -5,10 +5,26 @@
 }
 
 .app-container > h1 { 
-  margin-bottom : 40px;
-  margin-left : 25px;
+  width : 92%;
+  margin : 60px auto 30px auto;
 }
 
-.app-container form {
-  margin-left : 25px;
+.csv-container {
+  width : 92%;
+  margin : auto;
+ 
+}
+
+.csv-import { 
+  display : flex ;
+  gap : 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+@media screen and (max-width : 500px) {
+  h1{
+    text-align: center;
+  }
+  
 }

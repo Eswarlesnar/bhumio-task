@@ -51,26 +51,35 @@ function App() {
 
   const headerKeys = Object.keys(Object.assign({}, ...array));
   
+  
+const widthAndHeightButton = { 
+  width : "130px",
+  height : "33px"
+}
 
   return (
     <div className="app-container">
       <h1> CSV DATATABLE </h1>
-      <form className="csv-import">
-        <input
-          type={"file"}
-          id={"csvFileInput"}
-          accept={".csv"}
-          onChange={handleOnChange}
-        />
+      <div className="csv-container">
+        <form className="csv-import">
+          <input
+            type={"file"}
+            id={"csvFileInput"}
+            accept={".csv"}
+            onChange={handleOnChange}
+          />
 
-        <Button variant ="outlined"
-          onClick={(e) => {
-            handleOnSubmit(e);
-          }}
-        >
-          IMPORT CSV
-        </Button>
-      </form>
+          <Button variant ="outlined"
+            onClick={(e) => {
+              handleOnSubmit(e);
+            }}
+            sx = {widthAndHeightButton}
+          >
+            IMPORT CSV
+          </Button>
+        </form>
+      </div>
+      
       <Filter userFilter = {userFilter}  setUserFilter = {setUserFilter}/>
       <br />
       <DataTable headerData = {headerKeys} data = {data} userFilter = {userFilter} />

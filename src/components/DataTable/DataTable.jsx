@@ -5,7 +5,7 @@ import { filterData } from '../../utils';
 function DataTable({headerData , data , userFilter}) {
   const filteredData = filterData(data , userFilter)  
   const columns = headerData.map(item => {
-    return {field : item , headerName : item }
+    return {field : item , headerName : item  , headerClassName : "app-datatable-header"}
   })
   console.log(columns)
   const rows = filteredData
@@ -21,7 +21,18 @@ function DataTable({headerData , data , userFilter}) {
           },
         }}
         pageSizeOptions={[10 , 20 , 25]}
-      
+        sx={{
+          boxShadow: 2,
+          border: 1,
+          borderColor: 'lightgrey',
+          '& .MuiDataGrid-cell:hover': {
+            color: 'primary.main',
+          },
+          '& .app-datatable-header': {
+            backgroundColor: 'lightgrey',
+            fontWeight : "bold"
+          },
+        }}
       />
        }
      </div>

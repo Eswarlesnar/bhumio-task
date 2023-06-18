@@ -1,4 +1,6 @@
 import { useState , useContext } from "react";
+import Button from '@mui/material/Button';
+import {v4 as uuid} from "uuid"
 import { dataContext } from "./context/dataContext";
 import DataTable from "./components/DataTable/DataTable";
 import Filter from "./components/Filter/Filter";
@@ -8,7 +10,7 @@ function App() {
   const [file, setFile] = useState();
   const [array, setArray] = useState([]);
   const [userFilter , setUserFilter] = useState("")
-  const {setData} = useContext(dataContext)
+  const {setData , data} = useContext(dataContext)
   const fileReader = new FileReader();
   const handleOnChange = (e) => {
     setFile(e.target.files[0]);
@@ -26,9 +28,12 @@ function App() {
       }, {});
       return obj;
     });
+    const arrayWithUniqueId = array.map(item => {
+       return {...item , "id" : uuid()}
+    })
 
     setArray(array);
-    setData(array)
+    setData(arrayWithUniqueId)
   };
 
   const handleOnSubmit = (e) => {
@@ -45,7 +50,7 @@ function App() {
   };
 
   const headerKeys = Object.keys(Object.assign({}, ...array));
-  console.log(array)
+  
 
   return (
     <div className="app-container">
@@ -58,17 +63,17 @@ function App() {
           onChange={handleOnChange}
         />
 
-        <button
+        <Button variant ="outlined"
           onClick={(e) => {
             handleOnSubmit(e);
           }}
         >
           IMPORT CSV
-        </button>
+        </Button>
       </form>
       <Filter userFilter = {userFilter}  setUserFilter = {setUserFilter}/>
       <br />
-      <DataTable headerData = {headerKeys} data = {array} userFilter = {userFilter} />
+      <DataTable headerData = {headerKeys} data = {data} userFilter = {userFilter} />
     </div>
   );
 }

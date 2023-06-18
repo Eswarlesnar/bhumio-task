@@ -12,7 +12,6 @@ export const filterData = (data , filter) => {
                 }    
             }
             if(item["Alt.Part#"]){            // checking if the item exists to prevent the .includes error on undefined 
-                console.log("in alt part" , item)
                 if(item["Alt.Part#"].includes(filter)){
                     flag = true
                 } 

@@ -1,7 +1,22 @@
 import { useState } from "react"
-import "./filter.css"
+import Button from '@mui/material/Button';
+import OutlinedInput from '@mui/material/OutlinedInput';
 
-const Filter = ({setUserFilter}) => {
+
+import "./filter.css"
+import UpdateInventory from "../UpdateInventory /UpdateInventory";
+
+const widthAndHeightInput = {
+    width : "200px",
+    height : "33px"
+}
+
+const widthAndHeightButton = { 
+    width : "50px",
+    height : "33px"
+}
+
+const Filter = ({userFilter ,setUserFilter}) => {
     const [userInput , setUserInput] = useState("")
     const handleFilterClick = () => {
         if(userInput){
@@ -12,11 +27,27 @@ const Filter = ({setUserFilter}) => {
     const handleFilterReset = () => {
         setUserFilter("")
     }
+   
     return <div className="filter-container">
-        <label htmlFor="filterInput">User Input</label>
-        <input id ="filterInput" type ="text" placeholder="search" value = {userInput} onChange={e => setUserInput(e.target.value)}/>
-        <button onClick = {handleFilterClick}>Filter</button>
-        <button onClick = {handleFilterReset}> Reset</button>
+        <label htmlFor="filterInput">Filter : </label>
+        <OutlinedInput 
+        sx = {widthAndHeightInput}
+           id ="filterInput" 
+           type ="text" 
+           placeholder="search" 
+           value = {userInput} 
+           onChange={e => setUserInput(e.target.value)}/>
+        <Button 
+           sx = {widthAndHeightButton}
+           onClick = {handleFilterClick} 
+           variant = "outlined"
+        >Filter</Button>
+        <Button 
+           sx = {widthAndHeightButton}
+           onClick = {handleFilterReset} 
+           variant = "outlined"
+           > Reset</Button>
+        <UpdateInventory userFilter ={userFilter}/>
     </div>
 }
 

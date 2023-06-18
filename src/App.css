@@ -2,9 +2,13 @@
   display : flex ;
   flex-direction: column;
   gap :20px;
-  margin-left : 30px;
 }
 
 .app-container > h1 { 
   margin-bottom : 40px;
+  margin-left : 25px;
+}
+
+.app-container form {
+  margin-left : 25px;
 }

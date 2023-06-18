@@ -33,6 +33,7 @@ function App() {
        return {...item , "id" : uuid()}
     })
 
+
     setArray(array);
     setData(arrayWithUniqueId)
   };

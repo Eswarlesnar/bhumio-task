@@ -106,6 +106,7 @@ const UpdateInventory = ({userFilter}) => {
           {
             open && rows.length > 0  && <div className = "update-datagrid" >
             <DataGrid
+             
               rows={rows}
               columns={columns}
               onCellEditStop ={handleCellEditCommit}
@@ -115,7 +116,9 @@ const UpdateInventory = ({userFilter}) => {
                   paginationModel: { pageSize: 10, page: 0 },
                 },
               }}
+
               pageSizeOptions={[10 , 20 , 25]}
+              
             />
           </div>
           }

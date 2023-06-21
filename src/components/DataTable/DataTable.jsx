@@ -2,10 +2,38 @@
 
 import { DataGrid } from '@mui/x-data-grid';
 import { filterData } from '../../utils';
+import { useState , useContext } from 'react';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 
-function DataTable({headerData , data , userFilter}) {
-  const filteredData = filterData(data , userFilter)  
+import { dataContext } from '../../context/dataContext';
 
+
+const deleteModalStyle = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid lightgrey',
+  boxShadow: 24,
+  p: 4,
+  textAlign : "center"
+};
+
+function DataTable({headerData  , userFilter}) {
+  const [selectedRows , setSelectedRows] = useState([])
+  const [modalOpen , setModalOpen]  = useState(false)
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const {data , setData } = useContext(dataContext)
+  const filteredData = filterData(data , userFilter)
+  
+  
   const columns = headerData.map(item => {
     if(["Part #" , "Alt.Part#"].includes(item)){
       return {field : item , headerName : item  , headerClassName : "app-datatable-header" , width : 150}   /// adding width to these two fields to identify the row ids
@@ -15,6 +43,37 @@ function DataTable({headerData , data , userFilter}) {
   
   console.log(columns)
   const rows = filteredData
+
+  const handleRowSelectionChange = (selectionModel) => {
+    setSelectedRows(selectionModel)
+    console.log(selectedRows)
+  }
+
+  const handleModalOpen = () => {
+    setModalOpen(true)
+  }
+
+  const handleModalClose = () => {
+    setModalOpen(false)
+  }
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false)
+  }
+
+  const handleRowDeletion = () => {
+    console.log("hello")
+    let tempCloneOfData = [...data]
+    if(selectedRows){
+      selectedRows.forEach(id => {
+        let index =  tempCloneOfData.findIndex(el => el.id === id)
+        tempCloneOfData.splice(index , 1)
+      })
+    }
+    setSnackbarOpen(true)
+    setData(tempCloneOfData)
+    setModalOpen(false)
+  }
   return (
      <div style = {{ width : "92%" , margin : "auto" ,height  : 550}}>
        {
@@ -35,12 +94,47 @@ function DataTable({headerData , data , userFilter}) {
             color: 'primary.main',
           },
           '& .app-datatable-header': {
-            backgroundColor: 'lightgrey',
-            fontWeight : "bold"
+            fontSize: "16px",
+            fontWeight : "900"
           },
         }}
+        checkboxSelection
+        rowSelectionModel={selectedRows}
+        onRowSelectionModelChange={handleRowSelectionChange}
+        
       />
        }
+       {
+        selectedRows.length > 0 && <Button 
+         onClick = {handleModalOpen} 
+         variant = "outlined" 
+         color = "warning"
+         sx = {{marginTop :"15px"}}
+         >
+         Delete</Button>
+       }
+       <Modal
+        open={modalOpen}
+        onClose={handleModalClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={deleteModalStyle}>
+          <Typography id="modal-modal-title" variant="p" >
+            Are you sure you want to delete the selected rows
+          </Typography>
+          <Box sx = {{display : "flex" , gap :"15px", justifyContent : "center" , marginTop : "20px"}}>
+            <Button onClick = {handleModalClose} variant = "outlined" > Cancel</Button>
+            <Button onClick = {handleRowDeletion} variant = "outlined" color = "secondary">Ok</Button>
+          </Box>
+        </Box>
+      </Modal>
+      <Snackbar open={snackbarOpen} autoHideDuration={1000} onClose={handleSnackbarClose}>
+        <MuiAlert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>
+          Deletion Successful
+        </MuiAlert>
+      </Snackbar>
+
      </div>
   );
 }

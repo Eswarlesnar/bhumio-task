@@ -3,6 +3,7 @@ export const filterData = (data , filter) => {
      if(!filter){
         return data
      }
+   
      if(data){
        filteredResults =  data.filter(item => {
             let flag = false 

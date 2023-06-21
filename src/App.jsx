@@ -1,17 +1,19 @@
-import { useState , useContext } from "react";
+import { useState } from "react";
 import Button from '@mui/material/Button';
 import {v4 as uuid} from "uuid"
 import { ExportToCsv } from 'export-to-csv'; 
-import { dataContext } from "./context/dataContext";
+
 import DataTable from "./components/DataTable/DataTable";
+import { useDispatch , useSelector } from 'react-redux';
+import { importData } from "./redux/dataSlice";
 import Filter from "./components/Filter/Filter";
 import "./App.css"
 
 function App() {
   const [file, setFile] = useState();
-  const [array, setArray] = useState([]);
   const [userFilter , setUserFilter] = useState("")
-  const {setData , data} = useContext(dataContext)
+  const data = useSelector(state => state.data.data)
+  const dispatch = useDispatch()
   const fileReader = new FileReader();
   const handleOnChange = (e) => {
     setFile(e.target.files[0]);
@@ -20,7 +22,6 @@ function App() {
   const csvFileToArray = string => {
     const csvHeader = string.slice(0, string.indexOf("\n")).split(",");  // gettting the first row for headers
     const csvRows = string.slice(string.indexOf("\n") + 1).split("\n");
-
     const array = csvRows.map(i => {
       const values = i.split(",");
       const obj = csvHeader.reduce((object, header, index) => {
@@ -32,10 +33,7 @@ function App() {
     const arrayWithUniqueId = array.map(item => {
        return {...item , "id" : uuid()}
     })
-
-
-    setArray(array);
-    setData(arrayWithUniqueId)
+    dispatch(importData(arrayWithUniqueId))
   };
 
   const handleOnSubmit = (e) => {
@@ -51,7 +49,7 @@ function App() {
     }
   };
 
-  const headerKeys = Object.keys(Object.assign({}, ...array));
+  const headerKeys = Object.keys(Object.assign({}, ...data));
 
   const csvOptions = {
     fieldSeparator: ',',

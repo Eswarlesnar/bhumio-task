@@ -2,15 +2,16 @@
 
 import { DataGrid } from '@mui/x-data-grid';
 import { filterData } from '../../utils';
-import { useState , useContext } from 'react';
+import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+import { useSelector , useDispatch } from 'react-redux';
+import { deleteRows } from '../../redux/dataSlice';
 
-import { dataContext } from '../../context/dataContext';
 
 
 const deleteModalStyle = {
@@ -30,8 +31,9 @@ function DataTable({headerData  , userFilter}) {
   const [selectedRows , setSelectedRows] = useState([])
   const [modalOpen , setModalOpen]  = useState(false)
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const {data , setData } = useContext(dataContext)
+  const data = useSelector(state => state.data.data)
   const filteredData = filterData(data , userFilter)
+  const dispatch = useDispatch()
   
   
   const columns = headerData.map(item => {
@@ -41,12 +43,12 @@ function DataTable({headerData  , userFilter}) {
     return {field : item , headerName : item  , headerClassName : "app-datatable-header"}
   })
   
-  console.log(columns)
+ 
   const rows = filteredData
 
   const handleRowSelectionChange = (selectionModel) => {
     setSelectedRows(selectionModel)
-    console.log(selectedRows)
+  
   }
 
   const handleModalOpen = () => {
@@ -62,16 +64,8 @@ function DataTable({headerData  , userFilter}) {
   }
 
   const handleRowDeletion = () => {
-    console.log("hello")
-    let tempCloneOfData = [...data]
-    if(selectedRows){
-      selectedRows.forEach(id => {
-        let index =  tempCloneOfData.findIndex(el => el.id === id)
-        tempCloneOfData.splice(index , 1)
-      })
-    }
+    dispatch(deleteRows(selectedRows))
     setSnackbarOpen(true)
-    setData(tempCloneOfData)
     setModalOpen(false)
   }
   return (

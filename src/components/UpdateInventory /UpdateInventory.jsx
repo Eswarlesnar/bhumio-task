@@ -3,10 +3,11 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
 import { DataGrid, GridCellEditStopReasons } from '@mui/x-data-grid';
-import { useState  , useContext , useEffect} from 'react';
-import { dataContext } from '../../context/dataContext';
+import { useState    , useEffect} from 'react';
 import { filterData } from '../../utils';
 import "./updateInventory.css"
+import { useDispatch, useSelector } from 'react-redux';
+import { updateRows } from '../../redux/dataSlice';
 
 const modalStyle = {
     position: 'absolute',
@@ -29,8 +30,9 @@ const modalStyle = {
 const UpdateInventory = ({userFilter}) => {
     const [open , setOpen] = useState(false)
     const [rows , setRows] = useState([])
-    const {data , setData} = useContext(dataContext)
+    const data = useSelector(state => state.data.data)
     const filteredData = filterData(data , userFilter)
+    const dispatch = useDispatch()
 
     const [updatedRowIds, setUpdatedRowIds] = useState([])  
 
@@ -50,13 +52,7 @@ const UpdateInventory = ({userFilter}) => {
     },[open])
 
     const handleUpdatedInventory = () => {
-      const tempGlobalData = [...data]
-      for(let i=0 ; i< updatedRowIds.length ; i++){
-        let id = updatedRowIds[i]
-        let indexOfmatchId = tempGlobalData.findIndex(item => item.id === id)
-        tempGlobalData[indexOfmatchId] = rows[i]
-      }
-      setData(tempGlobalData)
+      dispatch(updateRows({rows , updatedRowIds}))
       setOpen(false)
     }
    
